@@ -192,7 +192,7 @@
        * blocks of data at once. We still limit the size of
        * sent blocks to 512 because on Mac we seem to lose
        * data otherwise (not on any other platforms!) */
-      writeData[0].blockSize = slowWrite ? 19 : 512;
+      writeData[0].blockSize = Espruino.Config.SERIAL_BLOCK_SIZE || (slowWrite ? 19 : 512);
 
       writeData[0].showStatus &= writeData[0].data.length>writeData[0].blockSize;
       if (writeData[0].showStatus) {

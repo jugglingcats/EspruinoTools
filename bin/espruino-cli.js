@@ -20,6 +20,8 @@ function getHelp() {
    "  -d deviceName            : Connect to the first device with a name containing deviceName",
    "  -b baudRate              : Set the baud rate of the serial connection",
    "                               No effect when using USB, default: 9600",
+   "  -s, --serial-block-size size",
+   "                           : Set the size of blocks to send over serial connections",
    "  --no-ble                 : Disables Bluetooth Low Energy (using the 'noble' module)",
    "  --list                   : List all available devices and exit",
    "  --listconfigs            : Show all available config options and exit",
@@ -117,6 +119,9 @@ for (var i=2;i<process.argv.length;i++) {
    } else if (arg=="-b") {
      i++; args.baudRate = parseInt(next);
      if (!isNextValid(next) || isNaN(args.baudRate)) throw new Error("Expecting a numeric argument to -b");
+   } else if (arg=="--serial-block-size" || arg=="-s") {
+     i++; args.serialBlockSize = parseInt(next);
+     if (!isNextValid(next) || isNaN(args.serialBlockSize)) throw new Error("Expecting a numeric argument to -s, --serial-block-size");
    } else if (arg=="-j") {
      args.job = "";                                          // will trigger makeJobFile
      if (isNextValidJSON(next)) { i++; args.job =  next; };  // optional
@@ -165,6 +170,8 @@ function setupConfig(Espruino, callback) {
    Espruino.Config.MINIFICATION_LEVEL = "ESPRIMA";
  if (args.baudRate && !isNaN(args.baudRate))
    Espruino.Config.BAUD_RATE = args.baudRate;
+ if (args.serialBlockSize && !isNaN(args.serialBlockSize))
+   Espruino.Config.SERIAL_BLOCK_SIZE = args.serialBlockSize;
  if (args.noBle)
    Espruino.Config.BLUETOOTH_LOW_ENERGY = false;
  if (args.setTime)
